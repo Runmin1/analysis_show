@@ -10,7 +10,7 @@ body {
 body,
 html {
   height: 100%;
-  background-color: #c6cbd3;
+  background-color: #fff;
 }
 /*#583e7e*/
 .nav .open > a {
@@ -59,8 +59,9 @@ html {
 #sidebar-wrapper::-webkit-scrollbar {
   display: none;
 }
+/*----------#c6cbd3-------------*/
 #page-content-wrapper {
-  background-color: #c6cbd3;
+  background-color: #E6E6FA;
   padding-top: 70px;
   width: 100%;
 }
@@ -291,7 +292,7 @@ html {
 /* SOME DEMO STYLES - NOT REQUIRED #4c366d */
 body,
 html {
-  background-color: #c6cbd3;
+  background-color: #E6E6FA;
 }
 body h1,
 body h2,

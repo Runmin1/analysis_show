@@ -8,45 +8,32 @@ CurrentConfig.GLOBAL_ENV = Environment(loader=FileSystemLoader("./templates"))
 
 
 app = Flask(__name__)
-
-
-# @app.route('/<key>')
-# def job_analysis(key):
-#     return 'Hellow %s!' % key
-
-#localhost:5000/user/admin  显示Hello admin
-@app.route('/user')
-def hello(name):
-    if name =='admin':
-        return redirect(url_for('job_analysis'))
+job_show = analysis_show.Job_show()
 
 @app.route('/')
-def index():
-    # job_geo_show = analysis_show.Job_Geo_show('web_developer','前端开发')
-    # job_geo = job_geo_show.Job_Geo()
-    # job_funnel = job_geo_show.place_proportion()
-    # return render_template('index.html', Job_Geo=job_geo.render_embed(), place_proportion=job_funnel.dump_options())
-    return render_template('index.html')
+@app.route('/<name>')
+def index(name=None):
+    return render_template('index.html', name=name)
 
-@app.route('/Job_Geo')
-def Job_Geo():
-    job_geo_show = analysis_show.Job_Geo_show('web_developer','前端开发')
-    job_geo = job_geo_show.Job_Geo()
-    return Markup(job_geo.render_embed())
+@app.route('/place_Geo')
+def place_geo():
+    place_show = job_show.place_geo()
+    return Markup(place_show.render_embed())
 
-@app.route('/Job_Funnel')
-def Job_Funnel():
-    job_funnel_show = analysis_show.Job_Geo_show('web_developer', '前端开发')
-    job_funnel = job_funnel_show.place_proportion()
+@app.route('/place_Funnel')
+def place_funnel():
+    place_show = job_show.place_proportion()
+    return Markup(place_show.render_embed())
 
-    return Markup(job_funnel.render_embed())
+@app.route('/place_Bar')
+def place_bar():
+    place_show = job_show.place_bar()
+    return Markup(place_show.render_embed())
 
-@app.route('/Job_Bar')
-def Job_Bar():
-    job_bar_show = analysis_show.Job_Geo_show('web_developer', '前端开发')
-    job_bar = job_bar_show.job_bar()
-
-    return Markup(job_bar.render_embed())
+@app.route('/edu_pie')
+def edu_pie():
+    edu_show = job_show.edu_pie()
+    return Markup(edu_show.render_embed())
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -8,13 +8,10 @@ import csv
 import time
 from multiprocessing import Pool
 from db import *
+from config import key
 
-key = 'java'  # 全局变量key
-edu = ['博士', '硕士', '本科', '大专', '中专', '高中', '']
 client = MongodbClient()  # 初始化数据库类
 client.change_table(key)
-client.clear()
-
 
 # 获取页数
 def get_webpages(key):
@@ -42,12 +39,12 @@ def get_html(url, need_header):
     if need_header:
         response = requests.get(url, headers=headers)
     else:
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
     response.encoding = 'utf-8'
     while response.status_code != requests.codes.ok:
-        print(response.status_code)
+        print(response.status_code, ',', url)
         time.sleep(random.randrange(1, 3))
-        get_html(url)
+        get_html(url, False)
         continue
     else:
         return response.text
@@ -55,8 +52,8 @@ def get_html(url, need_header):
 
 fp = open('51job.csv', 'wt', newline='', encoding='GBK', errors='ignore')
 writer = csv.writer(fp)
-'''title, time, place, salary, num, exp, edu, company, companyinfo, companyplace, info'''
-writer.writerow(('职位', '时间', '地区', '薪资', '人数', '工作经验', '学历', '公司',
+'''link， title, time, place, salary, num, exp, edu, company, companyinfo, companyplace, info'''
+writer.writerow(('链接', '职位', '时间', '地区', '薪资', '人数', '工作经验', '学历', '公司',
                  '公司信息', '公司地址', '岗位信息'))
 
 
@@ -73,6 +70,7 @@ def extract_detail_data(html):
         if jobInfo_html:
             selector = etree.HTML(jobInfo_html)
             data = {}  # 定义一个数据字典存储岗位信息
+            data['link'] = jobInfo_url
             data['title'] = selector.xpath(
                 'string(//*[@id="pageContent"]/div[1]/div[1]/p/text())')
             data['time'] = selector.xpath(
@@ -94,19 +92,23 @@ def extract_detail_data(html):
             data['companyplace'] = selector.xpath(
                 'string(//*[@id="pageContent"]/div[2]/a[2]/span/text())')
             info = selector.xpath(
-                'string(//*[@id="pageContent"]/div[3]/div[2]/article)')
+                'string(//*[@id="pageContent"]/div[3]/div/article)')
             data['info'] = str(info).strip()
 
-            if (str(data['edu']) not in edu):
-                print("edu有错", jobInfo_url)
-                print(data['edu'])
-            if (data['title'] != ''):
+            # 空字符串用缺失值代替
+            for key in data:
+                if data[key] == '':
+                    data[key] = None
+
+            if data['title']:
                 # 添加到数据库中
                 client.put(data)
                 # 写入文件
-                writer.writerow((data['title'], data['time'], data['place'], data['salary'],
+                writer.writerow((jobInfo_url, data['title'], data['time'], data['place'], data['salary'],
                                  data['num'], data['exp'], data['edu'], data['company'],
                                  data['companyinfo'], data['companyplace'], data['info']))
+            else:
+                print(data['title'], jobInfo_url)
 
 
 # 数据爬取过程
@@ -125,10 +127,8 @@ if __name__ == '__main__':
     start = time.time()
     pages = get_webpages(key)
     print(pages, "页")
-    # for page in range(1,pages+1):
-    #     job_spider(page)
     # 利用进程池
-    pool = Pool(processes=1)
+    pool = Pool(processes=2)
     pages = ([p + 1 for p in range(pages)])
     # 往进程池添加任务
     pool.map(job_spider, pages)

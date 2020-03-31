@@ -1,5 +1,7 @@
 from config import TABLE, HOST, PORT
 from pymongo import MongoClient, ASCENDING
+import datetime
+
 
 # 我们把配置文件放入 config.py 文件内
 class MongodbClient(object):
@@ -45,25 +47,34 @@ class MongodbClient(object):
         """获取全部数据"""
         # 判断表里是否有数据
         if self.get_counts != 0:
-            # 先排序
-            self.sort()
             datas = [i for i in self.db[self.table].find()]
             return datas
         return None
 
     def put(self, data):
         """添加数据"""
-        # num = self.set_num() + 1
+        # 不同时间发布同一条招聘信息
+        slice_job = {k: data[k] for k in list(data.keys())[1:]}
+        data_if_exist = dict(slice_job)
+        data_time = data_if_exist.pop('time')
+        data_if_exist.pop('num')
         # 判断是否重复
-        if self.db[self.table].find_one(data):
-            # 重复则删除，重新插入
-            self.delete(data)
-            print("重复删除")
-            # data['num'] = num
-            self.db[self.table].insert_one(data)
+        if self.db[self.table].find_one("link", data['link']):
+            # 重复则不添加
+            print("链接重复,不添加")
+        elif self.db[self.table].find_one(data_if_exist):
+            # 数据重复，保留最新发布的一条招聘信息
+            db_time = self.db[self.table].find_one(data_if_exist)['time']
+            print(data_time, db_time, data['link'], self.db[self.table].find_one(data_if_exist)['link'])
+            # 将日期字符串转为时间再比较
+            datetime.datetime.strptime(db_time, "%Y-%m-%d")
+            datetime.datetime.strptime(data_time, "%Y-%m-%d")
+            if db_time < data_time:
+                self.delete(data_if_exist)
+                self.db[self.table].insert_one(data)
+                print("已替换为新的招聘信息")
+            print("数据重复,保留最新发布的一条招聘信息")
         else:
-            # data['num'] = num
-            print("无重复")
             self.db[self.table].insert_one(data)
 
     def delete(self, data):
@@ -72,7 +83,7 @@ class MongodbClient(object):
 
     def clear(self):
         """清空表"""
-        self.client.drop_database(self.table)
+        self.db[self.table].remove({})
 
     def sort(self):
         """按num键排序"""
