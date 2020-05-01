@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>选择待分析的职位</title>
+    <link href="../static/css/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+    <script src="../static/js/jquery-1.11.1.min.js"></script>
+    <script src="../static/js/jquery.searchableSelect.js"></script>
+  </head>
+  <body style="background: rgb(80, 163, 186)" >
+    <div style="text-align:center;">
+        <div class="header"><h1 style="margin-top: 120px">招聘数据分析展示平台</h1><h2></h2></div>
+        <form action="/choose", method="post"style="padding-top: 40px">
+            <select name="job_select">
+              <option value="数据分析">数据分析</option>
+              <option value="软件测试">软件测试</option>
+              <option value="python">python</option>
+              <option value="ERP实施">ERP实施</option>
+              <option value="Java开发">Java开发</option>
+            </select>
+            <input type="submit" value="提交" style="background: #1bb556; width: 50px;height: 30px">
+        </form>
+    </div>
+    <div style="margin-top: 100px;margin-left: 280px">
+        <div>
+            <p style="font-weight: bold">招聘数据分析展示平台，对招聘数据进行探索性分析，提供一个可视化的分析结果展示平台</p>
+        </div>
+        <div style="margin-top: 10px">
+            <p>说明：</p>
+            <p>平台数据来源于<a href="https://search.51job.com/">前程无忧</a></p></div>
+            <p>主要岗位为“信息管理与信息系统”相关岗位</p>
+    </div>
+    <script>
+		$(function(){
+			$('select').searchableSelect();
+		});
+    </script>
+  </body>
+</html>

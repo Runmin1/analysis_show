@@ -12,7 +12,12 @@ from config import key
 
 client = MongodbClient()  # 初始化数据库类
 client.change_table(key)
-
+fp = open('51job.csv', 'wt', newline='', encoding='GBK', errors='ignore')
+writer = csv.writer(fp)
+'''link， title, time, place, salary, num, exp, edu, company, companyinfo, companyplace, info'''
+writer.writerow(('链接', '职位', '时间', '地区', '薪资', '人数', '工作经验', '学历', '公司',
+                 '公司信息', '公司地址', '岗位信息'))
+key = 'ERP实施'
 # 获取页数
 def get_webpages(key):
     url = get_url(key, 1)
@@ -48,14 +53,6 @@ def get_html(url, need_header):
         continue
     else:
         return response.text
-
-
-fp = open('51job.csv', 'wt', newline='', encoding='GBK', errors='ignore')
-writer = csv.writer(fp)
-'''link， title, time, place, salary, num, exp, edu, company, companyinfo, companyplace, info'''
-writer.writerow(('链接', '职位', '时间', '地区', '薪资', '人数', '工作经验', '学历', '公司',
-                 '公司信息', '公司地址', '岗位信息'))
-
 
 # 提取详情页的关键字段
 def extract_detail_data(html):
@@ -125,14 +122,32 @@ def job_spider(page):
 
 if __name__ == '__main__':
     start = time.time()
-    pages = get_webpages(key)
-    print(pages, "页")
-    # 利用进程池
-    pool = Pool(processes=2)
-    pages = ([p + 1 for p in range(pages)])
-    # 往进程池添加任务
-    pool.map(job_spider, pages)
-    pool.close()
-    pool.join()
+    # 判断关键字是否已存在数据表中
+    if client.col_exist(key):
+        print('该关键字已存在数据表')
+        choose = input("是否继续爬虫（1：是，2：否）")
+        if choose=="1":
+            pages = get_webpages(key)
+            print(pages, "页")
+            # 利用进程池
+            pool = Pool(processes=2)
+            pages = ([p + 1 for p in range(pages)])
+            # 往进程池添加任务
+            pool.map(job_spider, pages)
+            pool.close()
+            pool.join()
 
-    print(time.time() - start)
+            print(time.time() - start)
+    else:
+        pages = get_webpages(key)
+        print(pages, "页")
+        # 利用进程池
+        pool = Pool(processes=2)
+        pages = ([p + 1 for p in range(pages)])
+        # 往进程池添加任务
+        pool.map(job_spider, pages)
+        pool.close()
+        pool.join()
+
+        print(time.time() - start)
+

@@ -7,6 +7,7 @@
 	<title>招聘信息分析与可视化系统</title>
 	<link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/bootstrap-3.3.4.css">
 	<link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/app.css" />
     <script src="https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
 {#    <script src="/static/echarts.min.js"></script>#}
     <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
@@ -14,7 +15,7 @@
 
 </head>
 <body>
-	
+
 	<div id="wrapper">
         <div class="overlay"></div>
         <!-- Sidebar -->
@@ -26,67 +27,201 @@
                     </a>
                 </li>
                 <li>
-                    <a href="http://127.0.0.1:5000/place"><i class="fa fa-fw fa-home"></i> 城市需求量</a>
+                    <a href="http://127.0.0.1:5000/1"><i class="fa fa-fw fa-home"></i> 城市需求量</a>
                 </li>
                 <li>
-                    <a href="http://127.0.0.1:5000/edu"><i class="fa fa-fw fa-folder"></i>学历要求</a>
+                    <a href="http://127.0.0.1:5000/2"><i class="fa fa-fw fa-folder"></i>学历&经验&行业</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-fw fa-file-o"></i>经验要求</a>
+                    <a href="http://127.0.0.1:5000/3"><i class="fa fa-fw fa-file-o"></i>岗位职责&岗位要求</a>
                 </li>
-                <li>
-                    <a href="#"><i class="fa fa-fw fa-cog"></i>待定</a>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-plus"></i>薪资相关<span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li class="dropdown-header">Dropdown heading</li>
-                    <li><a href="#">薪资</a></li>
-                    <li><a href="#">城市需求量</a></li>
-                    <li><a href="#">城市与薪资</a></li>
-                    <li><a href="#">学历要求</a></li>
-                    <li><a href="#">薪资与教育</a></li>
-                    <li><a href="#">薪资与学历</a></li>
-                  </ul>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-fw fa-bank"></i> 待定</a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-fw fa-dropbox"></i> 待定</a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-fw fa-twitter"></i> 待定</a>
-                </li>
+{#                <li>#}
+{#                    <a href="#"><i class="fa fa-fw fa-cog"></i>待定</a>#}
+{#                </li>#}
+{#                <li class="dropdown">#}
+{#                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-plus"></i>薪资相关<span class="caret"></span></a>#}
+{#                  <ul class="dropdown-menu" role="menu">#}
+{#                    <li class="dropdown-header">Dropdown heading</li>#}
+{#                    <li><a href="#">薪资</a></li>#}
+{#                    <li><a href="#">城市需求量</a></li>#}
+{#                    <li><a href="#">城市与薪资</a></li>#}
+{#                    <li><a href="#">学历要求</a></li>#}
+{#                    <li><a href="#">薪资与教育</a></li>#}
+{#                    <li><a href="#">薪资与学历</a></li>#}
+{#                  </ul>#}
+{#                </li>#}
+{#                <li>#}
+{#                    <a href="#"><i class="fa fa-fw fa-bank"></i> 待定</a>#}
+{#                </li>#}
+{#                <li>#}
+{#                    <a href="#"><i class="fa fa-fw fa-dropbox"></i> 待定</a>#}
+{#                </li>#}
+{#                <li>#}
+{#                    <a href="#"><i class="fa fa-fw fa-twitter"></i> 待定</a>#}
+{#                </li>#}
             </ul>
         </nav>
         <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
+        <div class="header">
+            {% if name=='1' or name==none %}
+            <h1 class="header-title">城市需求分布</h1>
+            {% elif name=='2' %}
+            <h1 class="header-title">学历、薪资、行业分布</h1>
+            {% elif name=='3' %}
+            <h1 class="header-title">岗位职责与岗位要求</h1>
+            {% endif %}
+        </div>
         <div id="page-content-wrapper">
-          <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
-            <span class="hamb-top"></span>
-            <span class="hamb-middle"></span>
-            <span class="hamb-bottom"></span>
-          </button>
-            <div class="container">
-                <div class="row">
-                    {% if name=='place' or name==none %}
-                        <div class="col-lg-6 col-md-6 col-sm-6" id="geo" style=" height:600px;">
+              <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
+              </button>
+		<div class="wrapper">
+			<div class="content">
+                {% if name=='1' or name==none %}
+                <div class="col col-l">
+					<div class="xpanel-wrapper xpanel-wrapper-25">
+						<div class="xpanel xpanel-r-t">
+							<div class="title"><span>招聘数据总量</span></div>
+                            <div class="lu-title"><span>{{ counts }}</span></div>
+						</div>
+					</div>
+					<div class="xpanel-wrapper xpanel-wrapper-75">
+						<div class="xpanel xpanel-r-b">
+							<div class="title"><span>需求量 Top20</span></div>
+                            <iframe src="http://127.0.0.1:5000/place_Bar" width="100%" height="100%" frameborder="0" marginheight="0" scrolling="no">
+                             </iframe>
+						</div>
+					</div>
+				</div>
+				<div class="col col-c">
+					<div class="xpanel-wrapper xpanel-wrapper-75">
+						<div class="xpanel no-bg">
                             <iframe src="http://127.0.0.1:5000/place_Geo" width="100%" height="100%" frameborder="0" scrolling="no">
                              </iframe>
+						</div>
+					</div>
+					<div class="xpanel-wrapper xpanel-wrapper-25">
+						<div class="xpanel xpanel-c-b">
+							<div class="title title-long">需求量的平均值及中位值</div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" style="font-size: 40px;color: #0d94eb; text-align: center;"><span>{{ avg }}</span></div>
+                                <div class="col-lg-6 col-md-6 col-sm-6" style="font-size: 40px;color: #0d94eb; text-align: center;"><span>{{ median }}</span></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6" style="font-size: 15px;color: white; text-align: center;"><span>平均值</span></div>
+                                <div class="col-lg-6 col-md-6 col-sm-6" style="font-size: 15px;color: white; text-align: center;"><span>中位值</span></div>
+                            </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6" id="bar" style="height:600px">
-                            <iframe src="http://127.0.0.1:5000/place_Bar" width="100%" height="100%" frameborder="0" scrolling="no">
+					</div>
+				</div>
+                <div class="col col-r">
+					<div class="xpanel-wrapper xpanel-wrapper-40">
+						<div class="xpanel xpanel-l-t">
+                            <div class="title"><span>薪资分布</span></div>
+                            <iframe src="http://127.0.0.1:5000/salary_low_high" width="100%" height="100%" frameborder="0" scrolling="no">
+                             </iframe>
+						</div>
+					</div>
+					<div class="xpanel-wrapper xpanel-wrapper-60">
+						<div class="xpanel xpanel-l-b">
+							<div class="title">城市需求量Top20 &月薪</div>
+                            <iframe src="http://127.0.0.1:5000/place_salary" width="100%" height="100%" frameborder="0" scrolling="no">
+                             </iframe>
+						</div>
+					</div>
+				</div>
+			</div>
+            {% elif name=='2' %}
+            <div class="col-lg-4 col-md-4 col-sm-4">
+					<div class="xpanel-wrapper xpanel-wrapper-50">
+						<div class="xpanel no-bg">
+							<div class="title"><span>学历要求</span></div>
+                            <iframe src="http://127.0.0.1:5000/edu_pie" width="100%" height="100%" frameborder="0" scrolling="no">#}
+                             </iframe>
+						</div>
+					</div>
+					<div class="xpanel-wrapper xpanel-wrapper-50">
+						<div class="xpanel xpanel-r-b">
+							<div class="title"><span>学历对月薪的影响</span></div>
+                            <iframe src="http://127.0.0.1:5000/edu_salary" width="100%" height="100%" frameborder="0" marginheight="0" scrolling="no">
+                             </iframe>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-8 col-md-8 col-sm-8"  style="margin-top: 20px">
+					<div class="xpanel-wrapper xpanel-wrapper-50">
+						<div class="xpanel xpanel-c-b col-lg-6 col-md-6 col-sm-6">
+                            <div class="title"><span>工作经验要求</span></div>
+                            <iframe src="http://127.0.0.1:5000/exp_bar" width="100%" height="100%" zoom="0.1" -transform: scale(0.1); frameborder="0" scrolling="no">#}
+                             </iframe>
+						</div>
+                        <div class="xpanel xpanel-c-b col-lg-6 col-md-6 col-sm-6">
+							<div class="title"><span>工作经验对月薪的影响</span></div>
+                            <iframe src="http://127.0.0.1:5000/exp_salary" width="100%" height="100%" frameborder="0" scrolling="auto">#}
                              </iframe>
                         </div>
-                    {% elif name=='edu' %}
-                        <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-2" style=" height:600px;">
-                            <iframe src="http://127.0.0.1:5000/edu_pie" width="100%" height="100%" frameborder="0" scrolling="no">
-                            </iframe>
+					</div>
+					<div class="xpanel-wrapper xpanel-wrapper-50">
+						<div class="xpanel xpanel-c-b">
+							<div class="title title-long"><span>不同行业的平均月薪</span></div>
+                            <iframe src="http://127.0.0.1:5000/industry" width="100%" height="100%" frameborder="0" scrolling="auto">#}
+                             </iframe>
                         </div>
-                    {% endif %}
-            </div>
+					</div>
+				</div>
+            {% elif name=='3' %}
+
+                    <div style="margin-top: 50px;">
+                        <div class="col-lg-6 col-md-6 col-sm-6" style="padding-left: 80px">
+                            <div class="xpanel-wrapper xpanel-wrapper">
+                                <div class="xpanel no-bg">
+                                    <div class="title"><span>岗位职责</span></div>
+                                    <img src="http://127.0.0.1:5000/resp_word" style="width: 450px;height: 450px;">
+                                </div>
+                            </div>
+                        </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6" style="padding-left: 130px">
+                            <div class="xpanel-wrapper xpanel-wrapper">
+                                <div class="xpanel no-bg">
+                                    <div class="title"><span>岗位要求</span></div>
+        {#                            <iframe src="http://127.0.0.1:5000/req_word" width="100%" height="100%" frameborder="0" scrolling="auto">#}
+        {#                             </iframe>#}
+        {#                            <img src="data:;base64,{{ req_word }}"/>#}
+                                    <img src="http://127.0.0.1:5000/req_word" style="width: 450px;height: 450px">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            {% endif %}
+			</div>
+
+
+{#		</div>#}
+{#                <div class="row">#}
+{#                    {% if name=='place' or name==none %}#}
+{#                        <div class="col-lg-6 col-md-6 col-sm-6" id="geo" style=" height:600px;">#}
+{#                            <iframe src="http://127.0.0.1:5000/place_Geo" width="100%" height="100%" frameborder="0" scrolling="no">#}
+{#                             </iframe>#}
+{#                        </div>#}
+{#                        <div class="col-lg-6 col-md-6 col-sm-6" id="bar" style="height:600px">#}
+{#                            <iframe src="http://127.0.0.1:5000/place_Bar" width="100%" height="100%" frameborder="0" scrolling="no">#}
+{#                             </iframe>#}
+{#                        </div>#}
+{#                        <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1" style=" height:600px;">#}
+{#                            <iframe src="http://127.0.0.1:5000/place_Geo" width="100%" height="100%" frameborder="0" scrolling="no">#}
+{#                            </iframe>#}
+{#                        </div>#}
+{#                    {% elif name=='edu' %}#}
+{#                        <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-2" style=" height:600px;">#}
+{#                            <iframe src="http://127.0.0.1:5000/edu_pie" width="100%" height="100%" frameborder="0" scrolling="no">#}
+{#                            </iframe>#}
+{#                        </div>#}
+{#                    {% endif %}#}
+{#            </div>#}
         </div>
         <!-- /#page-content-wrapper -->
 
