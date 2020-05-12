@@ -21,6 +21,7 @@ class Job_show(object):
         self.place_salary_data = self.data_clean.get_place_salary()
         self.exp = self.data_clean.get_exp()
         self.edu_salary = self.data_clean.get_edu_avgsalary()
+        self.data_clean.word()
 
 
     #地理图
@@ -36,7 +37,7 @@ class Job_show(object):
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(
                 visualmap_opts=opts.VisualMapOpts(
-                    max_=num_list[-1], pos_left='2%', pos_bottom='8%', is_piecewise=False),
+                    max_=num_list[-1], pos_left='0%', pos_bottom='12%', is_piecewise=False),
                 title_opts=opts.TitleOpts(subtitle='\n数据来源：前程无忧', pos_left='15%'),
                 # toolbox_opts=opts.ToolboxOpts(),
             )
@@ -50,11 +51,11 @@ class Job_show(object):
         city_list = city_list[-20:]
         num_list = num_list[-20:]
         job_bar = (
-            Bar(init_opts=opts.InitOpts(width='350px', height='450px'))
+            Bar(init_opts=opts.InitOpts(width='350px', height='430px'))
             .add_xaxis(city_list)
             .add_yaxis("", num_list)
             .reversal_axis()
-            .set_global_opts(yaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(color='#f0f06f')))
+            .set_global_opts(datazoom_opts=opts.DataZoomOpts(is_show=False, type_="inside"),yaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(color='#f0f06f')))
             .set_series_opts(label_opts=opts.LabelOpts(position="right"),
                              itemstyle_opts=opts.ItemStyleOpts(color='#f0f06f'),
                              )
@@ -214,7 +215,7 @@ class Job_show(object):
                                 datazoom_opts=opts.DataZoomOpts(is_show=False, type_="inside"),
                                  yaxis_opts=opts.AxisOpts(name="薪资（千/月）"),
                                  xaxis_opts=opts.AxisOpts(
-                                     name="工作经验", axislabel_opts=opts.LabelOpts(rotate=-40)),
+                                     name="工作经验", axislabel_opts=opts.LabelOpts(rotate=-40, color='#fff')),
                                   )
         )
         return exp_salary
@@ -270,7 +271,7 @@ class Job_show(object):
                                      opts.DataZoomOpts(is_show=False), opts.DataZoomOpts(type_="inside")],
                                  yaxis_opts=opts.AxisOpts(name="薪资（千/月）"),
                                  xaxis_opts=opts.AxisOpts(
-                                     name="行业", axislabel_opts=opts.LabelOpts(rotate=-10)),
+                                     name="行业", axislabel_opts=opts.LabelOpts(rotate=-10, color='#f0f06f')),
                                  toolbox_opts=opts.ToolboxOpts(),
                                  )
         )
@@ -287,21 +288,25 @@ class Job_show(object):
 
     # 岗位职责
     def resp_word(self):
-        image = Image()
-        img_src = ("responsibility.png")
-        image.add(
-            src=img_src,
-            style_opts={"width": "200px", "height": "200px", "style": "margin-top: 20px"},
-        )
-        return image
+        # image = Image()
+        # img_src = ("responsibility.png")
+        # image.add(
+        #     src=img_src,
+        #     style_opts={"width": "200px", "height": "200px", "style": "margin-top: 20px"},
+        # )
+        resp = data_clean.word()[0]
+
+        return resp
 
     # 岗位要求
     def req_word(self):
-        image = Image()
-        img_src = ("requirement.png")
-        image.add(
-            src=img_src,
-            style_opts={"width": "200px", "height": "200px", "style": "margin-top: 20px"},
-        )
+        # image = Image()
+        # img_src = ("requirement.png")
+        # image.add(
+        #     src=img_src,
+        #     style_opts={"width": "200px", "height": "200px", "style": "margin-top: 20px"},
+        # )
+        req = data_clean.word()[1]
+
         return image
 

@@ -8,16 +8,16 @@ import csv
 import time
 from multiprocessing import Pool
 from db import *
-from config import key
 
-client = MongodbClient()  # 初始化数据库类
+key = 'Java开发'
+client = MongodbClient(table=key)  # 初始化数据库类
 client.change_table(key)
 fp = open('51job.csv', 'wt', newline='', encoding='GBK', errors='ignore')
 writer = csv.writer(fp)
 '''link， title, time, place, salary, num, exp, edu, company, companyinfo, companyplace, info'''
 writer.writerow(('链接', '职位', '时间', '地区', '薪资', '人数', '工作经验', '学历', '公司',
                  '公司信息', '公司地址', '岗位信息'))
-key = 'ERP实施'
+
 # 获取页数
 def get_webpages(key):
     url = get_url(key, 1)

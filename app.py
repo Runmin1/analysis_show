@@ -1,5 +1,6 @@
 from flask import Flask,redirect,url_for,render_template,Response,request
 import analysis_show
+import salary_pred
 from data_clean import data_clean
 from jinja2 import Markup, Environment, FileSystemLoader
 from pyecharts.globals import CurrentConfig
@@ -15,10 +16,12 @@ app = Flask(__name__)
 def choose():
     global select
     global job_show
-    global data_clean
+    global datas
+    global pred
     select = request.form.get('job_select')
     job_show = analysis_show.Job_show(select)
-    data_clean = data_clean(select)
+    pred = salary_pred(select)
+    datas = data_clean(select)
     return redirect(url_for("nav"))
 
 @app.route('/')
@@ -28,8 +31,8 @@ def index():
 @app.route('/nav')
 @app.route('/<name>')
 def nav(name=None):
-    counts = data_clean.get_counts()   # 获取招聘信息总数
-    avg, median = data_clean.place_avg_median()  # 获取招聘信息平均数及中位数
+    counts = datas.get_counts()   # 获取招聘信息总数
+    avg, median = datas.place_avg_median()  # 获取招聘信息平均数及中位数
     return render_template('index.html', name=name, counts=counts,avg=avg,median=median)
 
 @app.route('/test')
@@ -88,6 +91,7 @@ def industry():
 
 @app.route('/resp_word')
 def resp_word():
+
     with open("responsibility.png", 'rb') as f:
         image = f.read()
     req = Response(image, mimetype="image/jpeg")
@@ -95,12 +99,20 @@ def resp_word():
 
 @app.route('/req_word')
 def req_word():
+
     with open("requirement.png", 'rb') as f:
         image = f.read()
     resp = Response(image, mimetype="image/png")
     return resp
 
+@app.route('/pred')
+def salary_pred():
+    city = request.form.get('city')
+    exp = request.form.get('exp')
+    edu = request.form.get('edu')
+    pred_low, pred_avg = pred.pred(city, exp, edu)
 
+    return render_template('index.html', pred_low=pred_low, pred_avg=pred_avg)
 
 
 if __name__ == '__main__':

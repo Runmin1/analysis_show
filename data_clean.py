@@ -6,9 +6,6 @@ import pandas as pd
 import numpy as np
 import re
 from wordcloud import WordCloud, ImageColorGenerator, STOPWORDS
-import matplotlib.pyplot as plt
-from config import TABLE
-
 
 class data_clean(object):
 
@@ -295,6 +292,7 @@ class data_clean(object):
                         width=1000, height=860, margin=2,  # 设置图片默认的大小,margin为词语边缘距离
                         ).generate(wordlist2)
         wc2.to_file("requirement.png")
+        return wc1, wc2
 
 if __name__ == '__main__':
     data_clean = data_clean()
