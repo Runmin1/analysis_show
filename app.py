@@ -1,6 +1,6 @@
 from flask import Flask,redirect,url_for,render_template,Response,request
 import analysis_show
-import salary_pred
+from salary_pred import salary_pred
 from data_clean import data_clean
 from jinja2 import Markup, Environment, FileSystemLoader
 from pyecharts.globals import CurrentConfig
@@ -11,16 +11,15 @@ CurrentConfig.GLOBAL_ENV = Environment(loader=FileSystemLoader("./templates"))
 # select = "数据分析"
 app = Flask(__name__)
 
-
 @app.route('/choose', methods=['GET', 'POST'])
 def choose():
     global select
     global job_show
+    global s_pred
     global datas
-    global pred
     select = request.form.get('job_select')
     job_show = analysis_show.Job_show(select)
-    pred = salary_pred(select)
+    s_pred = salary_pred(select)
     datas = data_clean(select)
     return redirect(url_for("nav"))
 
@@ -29,11 +28,12 @@ def index():
     return render_template('choose.html')
 
 @app.route('/nav')
-@app.route('/<name>')
-def nav(name=None):
+@app.route('/nav/<name>')
+@app.route('/nav/<name>?<string:pred_low>?<string:pred_avg>?<string:info_low_model>?<string:info_low_loss>?<string:info_avg_model>?<string:info_avg_loss>')
+def nav(name=None, pred_low=None, pred_avg=None, info_low_model=None, info_low_loss=None, info_avg_model=None, info_avg_loss=None):
     counts = datas.get_counts()   # 获取招聘信息总数
     avg, median = datas.place_avg_median()  # 获取招聘信息平均数及中位数
-    return render_template('index.html', name=name, counts=counts,avg=avg,median=median)
+    return render_template('index.html', name=name, counts=counts, avg=avg, median=median, pred_low=pred_low, pred_avg=pred_avg, info_low_model=info_low_model, info_low_loss=info_low_loss, info_avg_model=info_avg_model, info_avg_loss=info_avg_loss)
 
 @app.route('/test')
 def test():
@@ -105,14 +105,17 @@ def req_word():
     resp = Response(image, mimetype="image/png")
     return resp
 
-@app.route('/pred')
-def salary_pred():
+@app.route('/pred', methods=['GET', 'POST'])
+def pred():
     city = request.form.get('city')
     exp = request.form.get('exp')
     edu = request.form.get('edu')
-    pred_low, pred_avg = pred.pred(city, exp, edu)
+    pred_low, pred_avg = s_pred.pred(city, exp, edu)
+    info_low_model, info_low_loss = s_pred.get_info_low()
+    info_avg_model, info_avg_loss = s_pred.get_info_avg()
+    # pred_list = [pred_low[0], pred_avg[0]]
 
-    return render_template('index.html', pred_low=pred_low, pred_avg=pred_avg)
+    return redirect(url_for('nav', name='4', pred_low=pred_low[0], pred_avg=pred_avg[0], info_low_model=info_low_model, info_low_loss=info_low_loss, info_avg_model=info_avg_model, info_avg_loss=info_avg_loss))
 
 
 if __name__ == '__main__':

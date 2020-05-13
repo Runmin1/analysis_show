@@ -67,26 +67,29 @@ class salary_pred(object):
         print('系数:', model.coef_)
         print('截距:', model.intercept_)
         print(
-            '模型: SalePrice = {} + {} * 城市 + {} * 经验+ {} * 学历'.format(model.intercept_, model.coef_[0], model.coef_[1],
+            '模型: Salary = {} + {} * 城市 + {} * 经验+ {} * 学历'.format(model.intercept_, model.coef_[0], model.coef_[1],
                                                                      model.coef_[2]))
         print('均方根误差: {}'.format(np.sqrt(mean_squared_error(y_test, y_pred))))
-        info = {'系数':model.coef, '截距': model.intercept_, '模型': 'SalePrice = {} + {} * 城市 + {} * 经验+ {} * 学历'.format(
+        info = {'模型': 'Salary = {} + {} * 城市 + {} * 经验+ {} * 学历'.format(
             model.intercept_, model.coef_[0], model.coef_[1], model.coef_[2]), '均方根误差': np.sqrt(
             mean_squared_error(y_test, y_pred))}
         return model, info
 
-    def info_low(self):
-        return self.info_low
+    def get_info_low(self):
+        return self.info_low['模型'], self.info_low['均方根误差']
 
-    def info_avg(self):
-        return self.info_avg()
+    def get_info_avg(self):
+        return self.info_avg['模型'], self.info_avg['均方根误差']
 
     # 预测
     def pred(self, area, exp, xueli):
         area_index = list(self.le.classes_).index(area)
         xueli_index = list(('中专/中技', '高中', '大专', '本科', '硕士', '博士')).index(xueli)
+        exp = int(exp)
         pred_low = self.model_low.predict([[area_index, exp, xueli_index]])
+        print("测试2")
         pred_avg = self.model_avg.predict([[area_index, exp, xueli_index]])
+        print("测试3")
         print(area + "区域、工作经验为", exp, "、学历为" + xueli)
         print("预测低薪资为：" + '%.2f' % pred_low)
         print("预测平均薪资为：" + '%.2f' % pred_avg)

@@ -19,7 +19,7 @@ class data_clean(object):
         # print(self.datas.shape)
         # 只保留职位名有数据或分析的职位
         if key=="数据分析":
-            self.datas = self.datas[self.datas.title.str.contains(r'.*?数据.*?|.*?分析.*?')]
+            self.datas = self.datas[self.datas.title.str.contains(r'.*?数据.*?')]
 
         print(self.datas.shape)
         # 重复数据处理（2种情况：内容重复、链接重复）

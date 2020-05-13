@@ -3,6 +3,7 @@ from pyecharts import options as opts  # 配置入口模块
 from pyecharts.components import Image
 from pyecharts.globals import ChartType, ThemeType, RenderType
 from data_clean import data_clean
+import multiprocessing
 
 
 
@@ -10,19 +11,41 @@ from data_clean import data_clean
 class Job_show(object):
 
     def __init__(self, key):
-        print(key)
+        # print(key)
         self.data_clean = data_clean(key)
+        # self.all_data = self.data_clean.get_all()
+        # self.place_data = self.data_clean.get_place()
+        # self.edu_data = self.data_clean.get_edu()
+        # self.low_salary_data = self.data_clean.get_low_salary()
+        # self.high_salary_data = self.data_clean.get_high_salary()
+        # self.avg_salary_data = self.data_clean.get_avg_salary()
+        # self.place_salary_data = self.data_clean.get_place_salary()
+        # self.exp = self.data_clean.get_exp()
+        # self.edu_salary = self.data_clean.get_edu_avgsalary()
+        # self.data_clean.word()
+        p1 = multiprocessing.Process(target=self.init_1)
+        p2 = multiprocessing.Process(target=self.init_2)
+        p3 = multiprocessing.Process(target=self.init_3)
+        p1.run()
+        p2.run()
+        p3.run()
+
+
+    def init_1(self):
         self.all_data = self.data_clean.get_all()
         self.place_data = self.data_clean.get_place()
         self.edu_data = self.data_clean.get_edu()
         self.low_salary_data = self.data_clean.get_low_salary()
+
+    def init_2(self):
         self.high_salary_data = self.data_clean.get_high_salary()
         self.avg_salary_data = self.data_clean.get_avg_salary()
         self.place_salary_data = self.data_clean.get_place_salary()
         self.exp = self.data_clean.get_exp()
         self.edu_salary = self.data_clean.get_edu_avgsalary()
-        self.data_clean.word()
 
+    def init_3(self):
+        self.data_clean.word()
 
     #地理图
     def place_geo(self):

@@ -27,16 +27,16 @@
                     </a>
                 </li>
                 <li>
-                    <a href="http://127.0.0.1:5000/1"><i class="fa fa-fw fa-home"></i> 城市需求量</a>
+                    <a href="http://127.0.0.1:5000/nav/1"><i class="fa fa-fw fa-home"></i> 城市需求量</a>
                 </li>
                 <li>
-                    <a href="http://127.0.0.1:5000/2"><i class="fa fa-fw fa-adjust"></i>学历&经验&行业</a>
+                    <a href="http://127.0.0.1:5000/nav/2"><i class="fa fa-fw fa-adjust"></i>学历&经验&行业</a>
                 </li>
                 <li>
-                    <a href="http://127.0.0.1:5000/3"><i class="fa fa-fw fa-file-o"></i>岗位职责&岗位要求</a>
+                    <a href="http://127.0.0.1:5000/nav/3"><i class="fa fa-fw fa-file-o"></i>岗位职责&岗位要求</a>
                 </li>
                 <li>
-                    <a href="http://127.0.0.1:5000/4"><i class="fa fa-fw fa-eye"></i>薪资预测</a>
+                    <a href="http://127.0.0.1:5000/nav/4"><i class="fa fa-fw fa-eye"></i>薪资预测</a>
                 </li>
 {#                <li class="dropdown">#}
 {#                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-plus"></i>薪资相关<span class="caret"></span></a>#}
@@ -187,14 +187,14 @@
                     </div>
             {% elif name=='4' %}
                     <div style="margin-top: 50px;">
-                        <div class="col-lg-6 col-md-6 col-sm-6" style="padding-left: 80px">
+                        <div class="col-lg-6 col-md-6 col-sm-6" style="width: 620px">
                             <div class="xpanel-wrapper xpanel-wrapper">
-                                <div class="xpanel no-bg">
+                                <div class="xpanel xpanel-c-b">
                                     <div class="title"><span>求职信息</span></div>
-                                    <form action="/pred", method="post" style="margin-top: 50px">
-                                        <div style="margin-top: 20px; color: white"><span>期望城市：</span><input type="text" name="city" placeholder="不加“市”。例如：深圳"></div>
-                                        <div style="margin-top: 20px; color: white">工作经验：<input type="text" name="exp" placeholder="单个数字。例如：0"></div>
-                                        <div style="margin-top: 20px; color: white">学历：
+                                    <form action="/pred", method="post" style="margin: 50px">
+                                        <div style="margin-top: 20px;"><span style="color: white">期望城市：</span><input type="text" name="city" placeholder="不加“市”。例如：深圳"></div>
+                                        <div style="margin-top: 20px;"><span style="color: white">工作经验：</span><input type="text" name="exp" placeholder="单个数字。例如：0"></div>
+                                        <div style="margin-top: 20px;"><span style="color: white">学历：</span>
                                             <select name="edu">
                                               <option value="中专">中专</option>
                                               <option value="中技">中技</option>
@@ -205,18 +205,27 @@
                                                 <option value="博士">博士</option>
                                             </select>
                                         </div>
-                                        <input id='btnSubmit' type="submit" value="开始预测"  style="background: rgb(140, 200, 236); width: 200px;height: 30px;margin-top: 50px">
+                                        <input id='btnSubmit' type="submit" value="开始预测"  style="background: rgb(140, 200, 236); width: 200px;height: 30px;margin: 50px">
                                     </form>
                                 </div>
                             </div>
                         </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6" style="padding-left: 130px">
+                        <div class="col-lg-6 col-md-6 col-sm-6" style="width: 620px">
                             <div class="xpanel-wrapper xpanel-wrapper">
-                                <div class="xpanel no-bg">
+                                <div class="xpanel xpanel-l-t">
                                     <div class="title"><span>预测结果</span></div>
-                                    <span>低薪：{pred_low}</span>
-                                    <span>平均薪资：{pred_avg}</span>
-
+                                    <div style="margin: 50px">
+                                        <div style="margin: 20px"><span style="color: white">薪资下限：{{ pred_low }}</span></div>
+                                        <div style="margin: 20px"><span style="color: white">模型：{{ info_low_model }}</span></div>
+                                        <div style="margin: 20px"><span style="color: white">均方根误差：{{ info_low_loss }}</span></div>
+                                    </div>
+                                </div>
+                                <div class="xpanel xpanel-l-t">
+                                    <div style="padding: 50px">
+                                        <div style="margin: 20px"><span style="color: white">平均薪资：{{ pred_avg }}</span></div>
+                                        <div style="margin: 20px"><span style="color: white">模型：{{ info_avg_model }}</span></div>
+                                        <div style="margin: 20px"><span style="color: white">均方根误差：{{ info_avg_loss }}</span></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -261,13 +270,13 @@
 		  });  
 		});
 
-		$("#btnSubmit").on('click', function () {
-          // JQUERY
-          $(this).attr("disabled", "disabled");
-          // JavaScript
+		{#$("#btnSubmit").on('click', function () {#}
+        {#  // JQUERY#}
+        {#  $(this).attr("disabled", "disabled");#}
+        {#  // JavaScript#}
           {#document.getElementById("btnButton").setAttribute("disabled", "disabled");#}
-          console.log("btn clicked");
-        });
+        {#  console.log("btn clicked");#}
+        {#});#}
 
 		function CheckClk(){
 		    var clkBool = true
