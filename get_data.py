@@ -9,7 +9,7 @@ import time
 from multiprocessing import Pool
 from db import *
 
-key = 'Java开发'
+key = '软件测试'
 client = MongodbClient(table=key)  # 初始化数据库类
 client.change_table(key)
 fp = open('51job.csv', 'wt', newline='', encoding='GBK', errors='ignore')

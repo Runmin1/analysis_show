@@ -23,12 +23,14 @@ class salary_pred(object):
         citys_list = jobs['citys'].tolist()
         jobs['citys'] = self.le.fit_transform(jobs['citys'].astype(str))  # 城市重编码
         jobs['edu'] = jobs['edu'].replace('中专', 0)  # 学历重编码
+        jobs['edu'] = jobs['edu'].replace('初中及以下', 0)
         jobs['edu'] = jobs['edu'].replace('中技', 0)
         jobs['edu'] = jobs['edu'].replace('高中', 1)
         jobs['edu'] = jobs['edu'].replace('大专', 2)
         jobs['edu'] = jobs['edu'].replace('本科', 3)
         jobs['edu'] = jobs['edu'].replace('硕士', 4)
         jobs['edu'] = jobs['edu'].replace('博士', 5)
+
         # 特征选择
         X = jobs[['citys', 'exp', 'edu']]
         # 结果集
@@ -43,11 +45,11 @@ class salary_pred(object):
         ## 1年经验，2年经验，3-9年经验，无工作经验
         if '-' in exp:
             exp = exp.split('-')
-            return exp[0]
+            return int(exp[0])
         elif exp == '无工作经验' or '在校生/应届生':
             return 0
         else:
-            return exp[0]
+            return int(exp[0])
 
     def fit(self, X, y):
         # 30%的测试数据

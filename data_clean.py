@@ -252,7 +252,7 @@ class data_clean(object):
         return exp, low_salary, high_salary
 
     def word(self):
-        r = r"任职要求|任职资格|岗位要求|任职条件|任职职格|职位需求|职位要求|工作经验及所需技能"
+        r = r"任职要求|任职资格|岗位要求|岗位职责|职位描述|任职条件|任职职格|职位需求|职位要求|工作经验及所需技能"
         # 提取岗位职责
         responbility = self.datas['info'].apply(lambda x: re.split(
             r, x)[0] if re.search(r, x) else x)
@@ -282,7 +282,7 @@ class data_clean(object):
         # 分析岗位要求
         wordlist2 = " ".join(jieba.cut(requirement, cut_all=False))
         stopwords2 = list(
-            STOPWORDS) + ['岗位', '职责', '相关专业', '以上学历', '优先', '计算', '经验', '学历', '上学', '熟练', '使用', '以上']  # 分析岗位要求
+            STOPWORDS) + ['岗位', '职责', '相关专业', '以上学历', '优先', '计算', '经验', '学历', '上学', '熟练', '使用', '以上','岗位职责']  # 分析岗位要求
         wc2 = WordCloud(font_path=r'C:\Users\润敏\PycharmProjects\analysis_show\static\fonts\FZY3JW.TTF',
                         background_color="white",  # 背景颜色
                         max_words=2000,  # 词云显示的最大词数
